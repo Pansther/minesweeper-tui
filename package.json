@@ -1,0 +1,27 @@
+{
+  "name": "minesweeper-tui",
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "bun --watch src/index.tsx",
+    "start": "bun src/index.tsx",
+    "build": "bun build ./src/index.tsx --outfile ./dist/cli.js --target node",
+    "build:binary": "rm -rf releases && mkdir releases && bun build ./src/index.tsx --compile --minify --target bun-linux-x64 --outfile releases/note-tui-linux-x64 && bun build ./src/index.tsx --compile --minify --target bun-darwin-x64 --outfile releases/note-tui-darwin-x64 && bun build ./src/index.tsx --compile --minify --target bun-darwin-arm64 --outfile releases/note-tui-darwin-arm64",
+    "compress:binary": "tar -czvf releases/note-tui-linux-x64.tar.gz -C releases note-tui-linux-x64 && tar -czvf releases/note-tui-darwin-x64.tar.gz -C releases note-tui-darwin-x64 && tar -czvf releases/note-tui-darwin-arm64.tar.gz -C releases note-tui-darwin-arm64"
+  },
+  "dependencies": {
+    "giggles": "latest",
+    "ink": "^6.8.0",
+    "react": "^19.2.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.2.13",
+    "typescript": "^5.0.3",
+    "prettier": "^2.8.7",
+    "@trivago/prettier-plugin-sort-imports": "^4.3.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-react-hooks": "^7.0.1",
+    "typescript-eslint": "^8.0.0"
+  }
+}
