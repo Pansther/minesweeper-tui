@@ -1,4 +1,3 @@
-import chalk from 'chalk'
 import { Difficulty, ItemType, MineType } from './type'
 
 const { Blank, Flag, Open } = ItemType
@@ -17,8 +16,8 @@ export const CONFIG = {
     percent: 0.15,
   },
   [Hard]: {
-    rows: 24,
-    cols: 24,
+    rows: 25,
+    cols: 25,
     percent: 0.23,
   },
 } as const
@@ -32,17 +31,6 @@ const DIRECTIONS = [
   [1, -1],
   [1, 0],
   [1, 1],
-] as const
-
-export const DANGER_LEVEL_COLORS = [
-  chalk.hex('#28A745'),
-  chalk.hex('#20C997'),
-  chalk.hex('#FFC107'),
-  chalk.hex('#FD7E14'),
-  chalk.hex('#DC3545'),
-  chalk.hex('#E01D2D'),
-  chalk.hex('#9F0000'),
-  chalk.hex('#d7005d'),
 ] as const
 
 const isValidCoordinate = (
