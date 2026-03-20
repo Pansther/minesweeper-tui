@@ -1,21 +1,25 @@
+import { useEffect } from 'react'
+import { useKeybindings } from 'giggles'
+import useStore from '@/store'
 import useGameContext from '../context'
 import {
-  generateMines,
-  revealEmptyCells,
-  countAdjacentMines,
   checkAllowOpenAdjacent,
-  openAdjacent,
   checkMines,
+  countAdjacentMines,
   flagAdjacent,
+  generateMines,
   hint,
+  openAdjacent,
+  revealEmptyCells,
 } from '../helper'
-import { ItemType, Difficulty, GameState } from '../type'
+import { GameState, ItemType } from '../type'
 
 const { Blank, Flag, Open } = ItemType
-const { Idle, Play, Fail } = GameState
+const { Idle, Play, Fail, Complete } = GameState
 
-const useInteract = ({ difficulty }: { difficulty: Difficulty }) => {
+const useInteract = (focus: { id: string }) => {
   const [game, setGame] = useGameContext()
+  const difficulty = useStore((s) => s.difficulty)
 
   const openItem = () => {
     const { row, col } = game.selectedIndex
@@ -101,6 +105,7 @@ const useInteract = ({ difficulty }: { difficulty: Difficulty }) => {
     }
   }
 
+  // eslint-disable-next-line
   const onHint = () => {
     const playState = game.playState
     const hintAmount = game.hintAmount
@@ -133,11 +138,18 @@ const useInteract = ({ difficulty }: { difficulty: Difficulty }) => {
     // hintItemIndex = [row, col]
   }
 
-  return {
-    onHint,
-    flagItem,
-    openItem,
-  }
+  useKeybindings(focus, {
+    d: { action: openItem, name: 'Open' },
+    f: { action: flagItem, name: 'Toggle Flag' },
+  })
+
+  useEffect(() => {
+    const isAllOpen = game.playRows
+      .flatMap((row) => row)
+      .every((col) => col === Open || col === Flag)
+
+    if (isAllOpen) game.playState = Complete
+  }, [game])
 }
 
 export default useInteract
