@@ -8,6 +8,7 @@ export enum Scene {
 export interface ThemeGameConfig {
   close: string
   selected: string
+  hint: string
   mine: string
   flag: string
   open: string

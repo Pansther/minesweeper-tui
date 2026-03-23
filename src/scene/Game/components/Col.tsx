@@ -1,9 +1,9 @@
-import useGameContext from '../context'
-import { countAdjacentMines, checkIsAdjacent } from '../helper'
-import { ItemType, GameState } from '../type'
-import useTheme from '@/hooks/useTheme'
 import cx from 'clsx'
 import { Box, Text } from 'ink'
+import useTheme from '@/hooks/useTheme'
+import useGameContext from '../context'
+import { checkIsAdjacent, countAdjacentMines } from '../helper'
+import { GameState, ItemType } from '../type'
 
 const { Flag, Open } = ItemType
 const { Play, Fail } = GameState
@@ -16,32 +16,32 @@ interface ColProps {
 
 const Col = ({ col, rowIndex, colIndex }: ColProps) => {
   const theme = useTheme()
-  const [game] = useGameContext()
+  const [{ isPlay, playState, playRows, mines, selectedIndex, hintIndex }] =
+    useGameContext()
 
-  const isPlay = game.isPlay
-  const sRow = game.selectedIndex.row
-  const sCol = game.selectedIndex.col
+  const sRow = selectedIndex.row
+  const sCol = selectedIndex.col
 
   const isSelected = sRow === rowIndex && sCol === colIndex
-  const isSelectedOpen = game.playRows[sRow][sCol] === Open
+  const isSelectedOpen = playRows[sRow][sCol] === Open
 
   const isOpen = col === Open
   const isFlag = col === Flag
-  const isMine = game.mines?.[rowIndex]?.[colIndex] || false
-  const isShowMine = isMine && (isOpen || game.playState === Fail)
-  const amount = countAdjacentMines(game.mines, rowIndex, colIndex)
-  // const isHint =
-  //   rowIndex === hintItemIndex[0] && colIndex === hintItemIndex[1]
+  const isMine = mines?.[rowIndex]?.[colIndex] || false
+  const isShowMine = isMine && (isOpen || playState === Fail)
+  const amount = countAdjacentMines(mines, rowIndex, colIndex)
+  const isHint = rowIndex === hintIndex[0] && colIndex === hintIndex[1]
   const isAdjacent = checkIsAdjacent(
     rowIndex,
     colIndex,
-    [game.selectedIndex.row, game.selectedIndex.col],
-    game.playRows,
+    [selectedIndex.row, selectedIndex.col],
+    playRows,
   )
 
-  const isShowAdjacent = isSelectedOpen && game.playState === Play && isAdjacent
+  const isShowAdjacent = isSelectedOpen && playState === Play && isAdjacent
 
-  const { close, dangers, flag, mine, open, selected, adjacent } = theme.game
+  const { close, hint, dangers, flag, mine, open, selected, adjacent } =
+    theme.game
 
   const backgroundColor = cx({
     [close]: !isSelected || !isPlay,
@@ -49,6 +49,7 @@ const Col = ({ col, rowIndex, colIndex }: ColProps) => {
     [open]: isOpen,
     [mine]: isShowMine,
     [flag]: isFlag,
+    [hint]: isHint,
     [selected]: isSelected && isPlay,
   })
     ?.split(' ')
@@ -56,7 +57,7 @@ const Col = ({ col, rowIndex, colIndex }: ColProps) => {
 
   const color = cx('black', {
     [dangers?.[amount - 1]]: isOpen,
-    black: isSelected,
+    black: isSelected || isHint,
   })
     ?.split(' ')
     ?.at(-1)

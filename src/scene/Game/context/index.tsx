@@ -1,8 +1,8 @@
+import { useImmer } from 'use-immer'
+import { createContext, useContext } from 'react'
 import { CONFIG, createEmptyGrid } from '../helper'
 import { Difficulty, GameState } from '../type'
 import type { GameContextType } from './type'
-import { createContext, useContext } from 'react'
-import { useImmer } from 'use-immer'
 
 const { Idle, Play } = GameState
 
@@ -15,6 +15,7 @@ const DEFAULT_VALUE: GameContextType = [
       col: Math.floor(DEFAULT_PLAYROWS_CONFIG.cols / 2),
     },
     hintAmount: 3,
+    hintIndex: [],
     mines: [] as number[][],
     playState: GameState.Idle,
     playRows: createEmptyGrid(

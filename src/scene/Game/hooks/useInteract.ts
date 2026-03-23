@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { useKeybindings } from 'giggles'
 import useStore from '@/store'
 import useGameContext from '../context'
@@ -20,6 +20,8 @@ const { Idle, Play, Fail, Complete } = GameState
 const useInteract = (focus: { id: string }) => {
   const [game, setGame] = useGameContext()
   const difficulty = useStore((s) => s.difficulty)
+
+  const hintTimeoutRef = useRef<NodeJS.Timeout>(undefined)
 
   const openItem = () => {
     const { row, col } = game.selectedIndex
@@ -56,6 +58,7 @@ const useInteract = (focus: { id: string }) => {
 
         setGame((s) => {
           s.playRows = openAdjacent(s.playRows, row, col)
+          s.hintIndex = []
           s.playState = checkPlayRowsAndMines(s.playRows, s.mines)
         })
       }
@@ -71,8 +74,6 @@ const useInteract = (focus: { id: string }) => {
 
   const checkPlayRowsAndMines = (playRows: number[][], mines: number[][]) => {
     const isFoundMine = checkMines(playRows, mines)
-
-    // hintItemIndex = [undefined, undefined]
 
     if (isFoundMine) return Fail
 
@@ -105,42 +106,35 @@ const useInteract = (focus: { id: string }) => {
     }
   }
 
-  // eslint-disable-next-line
-  const onHint = () => {
-    const playState = game.playState
-    const hintAmount = game.hintAmount
-    const playRows = game.playRows
-    const mines = game.mines
-
-    if (playState !== Play) return
-    if (hintAmount <= 0) return
+  const showHint = () => {
+    if (game.playState !== Play) return
+    if (game.hintAmount <= 0) return
 
     setGame((s) => {
       s.hintAmount -= 1
+
+      const hintItem = hint(s.playRows, s.mines)
+
+      if (!hintItem) return
+
+      const { row, col } = hintItem
+
+      s.hintIndex = [row, col]
     })
 
-    const hintItem = hint(playRows, mines)
+    clearTimeout(hintTimeoutRef.current)
 
-    if (!hintItem) return
-
-    // const { row, col } = hintItem
-
-    // const item = document.querySelector(`#item-${row}-${col}`)
-    //
-    // if (!item) return
-    //
-    // item.scrollIntoView({
-    //   block: 'center',
-    //   inline: 'center',
-    //   behavior: 'smooth',
-    // })
-
-    // hintItemIndex = [row, col]
+    hintTimeoutRef.current = setTimeout(() => {
+      setGame((s) => {
+        s.hintIndex = []
+      })
+    }, 1_000)
   }
 
   useKeybindings(focus, {
-    d: { action: openItem, name: 'Open' },
+    ' ': { action: openItem, name: 'Open' },
     f: { action: flagItem, name: 'Toggle Flag' },
+    backspace: { action: showHint, name: 'Hint' },
   })
 
   useEffect(() => {

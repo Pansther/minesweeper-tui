@@ -1,8 +1,10 @@
 import { useKeybindings } from 'giggles'
 import useTheme from '@/hooks/useTheme'
 import useGameContext from '../context'
+import { GameState } from '../type'
 import { AvailableNavigateKey } from './type'
 
+const { Idle, Play } = GameState
 const {
   Up,
   Down,
@@ -19,74 +21,63 @@ const {
 
 const useNavigate = (focus: { id: string }) => {
   const { cycleTheme } = useTheme()
-  const [{ isPlay, restart }, setGame] = useGameContext()
+  const [{ restart }, setGame] = useGameContext()
 
   const navigate = (key: AvailableNavigateKey) => {
-    if (!isPlay) return
-
     switch (key) {
-      case Up:
-        setGame((s) => {
-          if (s.selectedIndex.row <= 0) {
-            s.selectedIndex.row = s.playRows[0].length - 1
-          } else {
-            s.selectedIndex.row -= 1
-          }
-        })
-        break
-      case Down:
-        setGame((s) => {
-          s.selectedIndex.row += 1
-          s.selectedIndex.row %= s.playRows[0].length
-        })
-        break
-      case Left:
-        setGame((s) => {
-          if (s.selectedIndex.col <= 0) {
-            s.selectedIndex.col = s.playRows[1].length - 1
-          } else {
-            s.selectedIndex.col -= 1
-          }
-        })
-        break
-      case Right:
-        setGame((s) => {
-          s.selectedIndex.col += 1
-          s.selectedIndex.col %= s.playRows[1].length
-        })
-        break
       case CycleThemeLeft:
         cycleTheme(-1)
         break
       case CycleThemeRight:
         cycleTheme(1)
         break
-      case Top:
-        setGame((s) => {
-          s.selectedIndex.row = 0
-        })
-        break
-      case Bottom:
-        setGame((s) => {
-          s.selectedIndex.row = s.playRows.length - 1
-        })
-        break
-      case Start:
-        setGame((s) => {
-          s.selectedIndex.col = 0
-        })
-        break
-      case End:
-        setGame((s) => {
-          s.selectedIndex.col = s.playRows[s.selectedIndex.row].length - 1
-        })
-        break
-      case Middle:
-        setGame((s) => {
-          s.selectedIndex.row = Math.floor(s.playRows.length / 2)
-        })
-        break
     }
+
+    setGame((s) => {
+      const isPlay = [Idle, Play].includes(s.playState)
+
+      if (!isPlay) return
+
+      switch (key) {
+        case Up:
+          if (s.selectedIndex.row <= 0) {
+            s.selectedIndex.row = s.playRows[0].length - 1
+          } else {
+            s.selectedIndex.row -= 1
+          }
+          break
+        case Down:
+          s.selectedIndex.row += 1
+          s.selectedIndex.row %= s.playRows[0].length
+          break
+        case Left:
+          if (s.selectedIndex.col <= 0) {
+            s.selectedIndex.col = s.playRows[1].length - 1
+          } else {
+            s.selectedIndex.col -= 1
+          }
+          break
+        case Right:
+          s.selectedIndex.col += 1
+          s.selectedIndex.col %= s.playRows[1].length
+          break
+        case Top:
+          s.selectedIndex.row = 0
+          break
+        case Bottom:
+          s.selectedIndex.row = s.playRows.length - 1
+          break
+        case Start:
+          s.selectedIndex.col = 0
+          break
+        case End:
+          s.selectedIndex.col = s.playRows[s.selectedIndex.row].length - 1
+          break
+        case Middle:
+          s.selectedIndex.row = Math.floor(s.playRows.length / 2)
+          break
+      }
+    })
   }
 
   useKeybindings(focus, {
