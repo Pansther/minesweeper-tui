@@ -148,7 +148,7 @@ export const themesGame: Record<AvailableTheme, ThemeGameConfig> = {
     close: '#26233a',
     selected: '#9ccfd8',
     adjacent: '#31748f',
-    hint: '#f6c177',
+    hint: '#f6c178',
     mine: '#eb6f92',
     flag: '#f6c177',
     open: '#191724',

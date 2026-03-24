@@ -1,5 +1,6 @@
 import { useEffect } from 'react'
 import { Box, Text } from 'ink'
+import useTheme from '@/hooks/useTheme'
 import useGameContext from '../context'
 import { countMinesAmount } from '../helper'
 import useTimer from '../hooks/useTimer'
@@ -13,7 +14,11 @@ const padToTwoDigits = (num: number) => {
 
 const StatusBar = () => {
   const [game] = useGameContext()
+  const { font, game: gameTheme } = useTheme()
   const [{ hours, minutes, seconds }, { start, stop, restart }] = useTimer()
+
+  const { hint } = gameTheme
+  const { textColor, accentColor, secondaryColor, foregroundColor } = font
 
   const remaining = countMinesAmount(game.playRows, game.mines)
 
@@ -30,18 +35,55 @@ const StatusBar = () => {
   }, [game, start, stop, restart])
 
   return (
-    <Box justifyContent="center">
-      {game.playState === Idle && <Text>Press &apos;space&apos; to start</Text>}
-      {[Play, Fail].includes(game.playState) && (
-        <Box gap={2}>
-          <Text>Time: {time}</Text>
-          <Text>|</Text>
-          <Text>Remaining: {remaining}</Text>
-          <Text>|</Text>
-          <Text>Hint: {game.hintAmount}</Text>
+    <Box height={1} alignItems="center" justifyContent="center">
+      {game.playState === Idle && (
+        <Box>
+          <Text color={textColor}>Press </Text>
+          <Text backgroundColor={foregroundColor} color={accentColor}>
+            {' '}
+            space{' '}
+          </Text>
+          <Text color={textColor}> to start</Text>
         </Box>
       )}
-      {game.playState === Complete && <Text>Usage Time: {time}</Text>}
+
+      {[Play, Fail].includes(game.playState) && (
+        <Box gap={2}>
+          <Box gap={1}>
+            <Text backgroundColor={foregroundColor} color={accentColor}>
+              {' '}
+              Time{' '}
+            </Text>
+            <Text color={textColor}>{time}</Text>
+          </Box>
+          <Text>|</Text>
+          <Box gap={1}>
+            <Text backgroundColor={foregroundColor} color={secondaryColor}>
+              {' '}
+              Remaining{' '}
+            </Text>
+            <Text color={textColor}>{remaining}</Text>
+          </Box>
+          <Text>|</Text>
+          <Box gap={1}>
+            <Text backgroundColor={foregroundColor} color={hint}>
+              {' '}
+              Hint{' '}
+            </Text>
+            <Text color={textColor}>{game.hintAmount}</Text>
+          </Box>
+        </Box>
+      )}
+
+      {game.playState === Complete && (
+        <Box gap={1}>
+          <Text backgroundColor={foregroundColor} color={accentColor}>
+            {' '}
+            Usage Time{' '}
+          </Text>
+          <Text color={textColor}>{time}</Text>
+        </Box>
+      )}
     </Box>
   )
 }

@@ -10,8 +10,10 @@ interface Store {
   scene: Scene
   theme: AvailableTheme
   difficulty: Difficulty
+  isShowKey: boolean
   setScene: (scene: Scene) => void
   cycleTheme: (amount: number) => void
+  toggleIsShowKey: () => void
 }
 
 const useStore = create(
@@ -19,6 +21,7 @@ const useStore = create(
     scene: Scene.Game,
     theme: AvailableTheme.Catppuccin,
     difficulty: Difficulty.Hard,
+    isShowKey: true,
     setScene(scene) {
       set((state) => {
         state.scene = scene
@@ -35,6 +38,10 @@ const useStore = create(
         } else {
           s.theme = nextTheme
         }
+      }),
+    toggleIsShowKey: () =>
+      set((s) => {
+        s.isShowKey = !s.isShowKey
       }),
   })),
 )

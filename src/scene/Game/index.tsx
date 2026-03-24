@@ -16,10 +16,17 @@ const Game = () => {
   useInteract(focus)
 
   return (
-    <Box flexDirection="column" gap={1} width="100%">
+    <Box flexDirection="column" width="100%" padding={1}>
       <StatusBar />
 
-      <Box flexDirection="column" alignItems="center">
+      <Box
+        width="100%"
+        height="100%"
+        marginTop={-1}
+        alignItems="center"
+        flexDirection="column"
+        justifyContent="center"
+      >
         {game.playRows.map((rows, rowIndex) => (
           <Box key={rowIndex}>
             {rows.map((col, colIndex) => (

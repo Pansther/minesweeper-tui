@@ -1,5 +1,6 @@
 import { useKeybindings } from 'giggles'
 import useTheme from '@/hooks/useTheme'
+import useStore from '@/store'
 import useGameContext from '../context'
 import { GameState } from '../type'
 import { AvailableNavigateKey } from './type'
@@ -22,6 +23,7 @@ const {
 const useNavigate = (focus: { id: string }) => {
   const { cycleTheme } = useTheme()
   const [{ restart }, setGame] = useGameContext()
+  const toggleIsShowKey = useStore((s) => s.toggleIsShowKey)
 
   const navigate = (key: AvailableNavigateKey) => {
     switch (key) {
@@ -75,6 +77,7 @@ const useNavigate = (focus: { id: string }) => {
           break
         case Middle:
           s.selectedIndex.row = Math.floor(s.playRows.length / 2)
+          s.selectedIndex.col = Math.floor(s.playRows.length / 2)
           break
       }
     })
@@ -97,6 +100,7 @@ const useNavigate = (focus: { id: string }) => {
     $: { action: () => navigate(End), name: 'End' },
     M: { action: () => navigate(Middle), name: 'Middle' },
     r: { action: restart, name: 'Restart' },
+    '?': { action: toggleIsShowKey, name: 'Hide Keys' },
   })
 }
 

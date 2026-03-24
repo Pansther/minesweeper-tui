@@ -142,8 +142,12 @@ const useInteract = (focus: { id: string }) => {
       .flatMap((row) => row)
       .every((col) => col === Open || col === Flag)
 
-    if (isAllOpen) game.playState = Complete
-  }, [game])
+    if (isAllOpen) {
+      setGame((s) => {
+        s.playState = Complete
+      })
+    }
+  }, [game, setGame])
 }
 
 export default useInteract

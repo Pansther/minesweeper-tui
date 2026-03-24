@@ -63,7 +63,14 @@ const Col = ({ col, rowIndex, colIndex }: ColProps) => {
     ?.at(-1)
 
   return (
-    <Box paddingX={1} backgroundColor={backgroundColor}>
+    <Box
+      paddingX={1}
+      minWidth={3}
+      minHeight={1}
+      alignItems="center"
+      justifyContent="center"
+      backgroundColor={backgroundColor}
+    >
       <Text bold color={color}>
         {isOpen && amount && !isMine
           ? amount
