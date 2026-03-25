@@ -1,5 +1,4 @@
 import { Box } from 'ink'
-import { useFocusNode } from 'giggles'
 import Col from './components/Col'
 import Instruction from './components/Instruction'
 import StatusBar from './components/StatusBar'
@@ -7,9 +6,7 @@ import useGameContext from './context'
 import useInteract from './hooks/useInteract'
 import useNavigate from './hooks/useNavigate'
 
-const Game = () => {
-  const focus = useFocusNode()
-
+const Game = ({ focus }: { focus: { id: string } }) => {
   const [game] = useGameContext()
 
   useNavigate(focus)

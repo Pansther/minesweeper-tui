@@ -18,7 +18,7 @@ interface Store {
 
 const useStore = create(
   immer<Store>((set) => ({
-    scene: Scene.Game,
+    scene: Scene.Menu,
     theme: AvailableTheme.Catppuccin,
     difficulty: Difficulty.Hard,
     isShowKey: true,

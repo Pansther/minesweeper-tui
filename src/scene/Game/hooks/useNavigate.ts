@@ -101,6 +101,7 @@ const useNavigate = (focus: { id: string }) => {
     M: { action: () => navigate(Middle), name: 'Middle' },
     r: { action: restart, name: 'Restart' },
     '?': { action: toggleIsShowKey, name: 'Hide Keys' },
+    Q: { action: () => process.exit(), name: 'Quit' },
   })
 }
 

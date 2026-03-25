@@ -1,6 +1,8 @@
+import cx from 'clsx'
 import { useState } from 'react'
 import { Box, Text } from 'ink'
-import { Select } from 'giggles/ui'
+import { useKeybindings } from 'giggles'
+import useTheme from '@/hooks/useTheme'
 import useStore from '@/store'
 import { Scene } from '@/store/type'
 
@@ -10,28 +12,80 @@ const menuItems = [
   { label: 'Quit', value: Scene.Quit },
 ]
 
-const Menu = () => {
-  const [choice, setChoice] = useState(Scene.Game)
-
+const Menu = ({ focus }: { focus: { id: string } }) => {
+  const { font } = useTheme()
   const setScene = useStore((s) => s.setScene)
 
-  const onSubmit = (scene: Scene) => {
-    if (scene === Scene.Quit) {
+  const [choice, setChoice] = useState(Scene.Game)
+
+  const { foregroundColor, accentColor, textColor } = font
+
+  const onSubmit = () => {
+    if (choice === Scene.Quit) {
       process.exit()
     }
 
-    setScene(scene)
+    setScene(choice)
   }
 
+  const navigate = (key: 'up' | 'down') => {
+    switch (key) {
+      case 'up':
+        setChoice((prev) =>
+          prev - 1 < menuItems[0].value
+            ? menuItems[menuItems?.length - 1].value
+            : prev - 1,
+        )
+        break
+      case 'down':
+        setChoice((prev) =>
+          prev + 1 > menuItems.length ? menuItems[0].value : prev + 1,
+        )
+        break
+    }
+  }
+
+  useKeybindings(focus, {
+    j: () => navigate('down'),
+    down: () => navigate('down'),
+    up: () => navigate('up'),
+    k: () => navigate('up'),
+    enter: onSubmit,
+  })
+
   return (
-    <Box flexDirection="column" gap={1}>
-      <Text bold>Minesweeper TUI</Text>
-      <Select
-        value={choice}
-        options={menuItems}
-        onChange={setChoice}
-        onSubmit={onSubmit}
-      />
+    <Box
+      gap={3}
+      width="100%"
+      alignItems="center"
+      flexDirection="column"
+      justifyContent="center"
+    >
+      <Text>
+        {`
+▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖ ▗▄▄▖▗▖ ▗▖▗▄▄▄▖▗▄▄▄▖▗▄▄▖ ▗▄▄▄▖▗▄▄▖     ▗▄▄▄▖▗▖ ▗▖▗▄▄▄▖
+▐▛▚▞▜▌  █  ▐▛▚▖▐▌▐▌   ▐▌   ▐▌ ▐▌▐▌   ▐▌   ▐▌ ▐▌▐▌   ▐▌ ▐▌      █  ▐▌ ▐▌  █
+▐▌  ▐▌  █  ▐▌ ▝▜▌▐▛▀▀▘ ▝▀▚▖▐▌ ▐▌▐▛▀▀▘▐▛▀▀▘▐▛▀▘ ▐▛▀▀▘▐▛▀▚▖      █  ▐▌ ▐▌  █
+▐▌  ▐▌▗▄█▄▖▐▌  ▐▌▐▙▄▄▖▗▄▄▞▘▐▙█▟▌▐▙▄▄▖▐▙▄▄▖▐▌   ▐▙▄▄▖▐▌ ▐▌      █  ▝▚▄▞▘▗▄█▄▖`}
+      </Text>
+
+      <Box flexDirection="column">
+        {menuItems.map(({ label, value }) => {
+          const isSelected = value === choice
+
+          return (
+            <Box key={value} justifyContent="center">
+              <Text
+                color={isSelected ? accentColor : textColor}
+                backgroundColor={cx({ [foregroundColor]: isSelected })}
+              >
+                {' '}
+                {label}{' '}
+              </Text>
+            </Box>
+          )
+        })}
+      </Box>
     </Box>
   )
 }
