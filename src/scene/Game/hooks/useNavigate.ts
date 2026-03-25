@@ -1,6 +1,7 @@
 import { useKeybindings } from 'giggles'
 import useTheme from '@/hooks/useTheme'
 import useStore from '@/store'
+import { Scene } from '@/store/type'
 import useGameContext from '../context'
 import { GameState } from '../type'
 import { AvailableNavigateKey } from './type'
@@ -22,6 +23,7 @@ const {
 
 const useNavigate = (focus: { id: string }) => {
   const { cycleTheme } = useTheme()
+  const setScene = useStore((s) => s.setScene)
   const [{ restart }, setGame] = useGameContext()
   const toggleIsShowKey = useStore((s) => s.toggleIsShowKey)
 
@@ -101,7 +103,7 @@ const useNavigate = (focus: { id: string }) => {
     M: { action: () => navigate(Middle), name: 'Middle' },
     r: { action: restart, name: 'Restart' },
     '?': { action: toggleIsShowKey, name: 'Hide Keys' },
-    Q: { action: () => process.exit(), name: 'Quit' },
+    Q: { action: () => setScene(Scene.Menu), name: 'Quit' },
   })
 }
 

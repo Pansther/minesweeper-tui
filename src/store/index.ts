@@ -14,13 +14,14 @@ interface Store {
   setScene: (scene: Scene) => void
   cycleTheme: (amount: number) => void
   toggleIsShowKey: () => void
+  setDifficulty: (difficulty: Difficulty) => void
 }
 
 const useStore = create(
   immer<Store>((set) => ({
     scene: Scene.Menu,
     theme: AvailableTheme.Catppuccin,
-    difficulty: Difficulty.Hard,
+    difficulty: Difficulty.Medium,
     isShowKey: true,
     setScene(scene) {
       set((state) => {
@@ -42,6 +43,10 @@ const useStore = create(
     toggleIsShowKey: () =>
       set((s) => {
         s.isShowKey = !s.isShowKey
+      }),
+    setDifficulty: (difficulty) =>
+      set((s) => {
+        s.difficulty = difficulty
       }),
   })),
 )
