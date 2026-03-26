@@ -1,26 +1,84 @@
 import { useEffect, useState } from 'react'
 import { Box, Text } from 'ink'
-import { useKeybindingRegistry } from 'giggles'
 import useTheme from '@/hooks/useTheme'
 import useStore from '@/store'
 import { AvailableTheme } from '@/store/type'
 
+const keys = [
+  {
+    key: '←/h',
+    label: 'left',
+  },
+  {
+    key: '↓/j',
+    label: 'down',
+  },
+  {
+    key: '↑/k',
+    label: 'up',
+  },
+  {
+    key: '→/l',
+    label: 'right',
+  },
+  {
+    key: '0',
+    label: 'start',
+  },
+  {
+    key: '$',
+    label: 'end',
+  },
+  {
+    key: 'g',
+    label: 'top',
+  },
+  {
+    key: 'G',
+    label: 'bottom',
+  },
+  {
+    key: 'M',
+    label: 'center',
+  },
+  {
+    key: 'space',
+    label: 'open',
+  },
+  {
+    key: 'f',
+    label: 'flag',
+  },
+  {
+    key: 'backspace',
+    label: 'hint',
+  },
+  {
+    key: '</>',
+    label: 'cycle theme',
+  },
+  {
+    key: 'r',
+    label: 'restart',
+  },
+  {
+    key: '?',
+    label: 'hide keys',
+  },
+  {
+    key: 'Q',
+    label: 'exit',
+  },
+] as const
+
 const Instruction = () => {
   const { font } = useTheme()
   const theme = useStore((s) => s.theme)
-  const registry = useKeybindingRegistry()
   const isShowKey = useStore((s) => s.isShowKey)
 
   const [isShowThemeNoti, setShowThemeNoti] = useState(false)
 
   const { textColor, accentColor, foregroundColor } = font
-
-  const key = registry.available.reduce((prev, cmd) => {
-    const name = cmd?.name as string
-    const prevKey = prev?.[name] ?? []
-
-    return { ...prev, [name]: [...prevKey, cmd.key.replace(' ', 'space')] }
-  }, {} as Record<string, string[]>)
 
   useEffect(() => {
     setShowThemeNoti(true)
@@ -38,13 +96,13 @@ const Instruction = () => {
     <Box justifyContent="space-between">
       <Box gap={0} flexWrap="wrap">
         {isShowKey &&
-          Object.entries(key).map(([name, keys]) => (
-            <Box key={name} gap={1}>
+          keys.map(({ key, label }) => (
+            <Box key={key} gap={1}>
               <Text dimColor color={accentColor}>
-                {keys.join('/')}
+                {key}
               </Text>
               <Text dimColor color={textColor}>
-                {name},{' '}
+                {label},{' '}
               </Text>
             </Box>
           ))}
