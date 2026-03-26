@@ -105,7 +105,7 @@ To start the `minesweeper-tui` application directly from the source code, make s
 
 ## Configuration
 
-`minesweeper-tui` stores your notes in `~/.minesweeper`.
+`minesweeper-tui` stores your config in `~/.minesweeper`.
 
 ## Troubleshooting
 
