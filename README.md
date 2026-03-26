@@ -97,7 +97,26 @@ To start the `minesweeper-tui` application directly from the source code, make s
   - `f`: Flag cell
   - `backspace`: Hint
 - **Game Management:**
+
   - `</>`: Cycle theme
   - `r`: Restart game
   - `?`: Toggle visibility of key instructions
   - `Q`: Exit game
+
+## Configuration
+
+`minesweeper-tui` stores your notes in `~/.minesweeper`.
+
+## Troubleshooting
+
+### Color Issues
+
+If the colors in `minesweeper-tui` appear dull or incorrect, your terminal might not be identifying itself as a True Color terminal. You can fix this by adding the following to your shell configuration (`.zshrc` or `.bashrc`):
+
+```bash
+export COLORTERM=truecolor
+```
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
