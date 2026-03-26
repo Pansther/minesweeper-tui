@@ -13,6 +13,9 @@
     "build:binary": "rm -rf releases && mkdir releases && bun build ./src/index.tsx --compile --minify --target bun-linux-x64 --outfile releases/minesweeper-tui-linux-x64 && bun build ./src/index.tsx --compile --minify --target bun-darwin-x64 --outfile releases/minesweeper-tui-darwin-x64 && bun build ./src/index.tsx --compile --minify --target bun-darwin-arm64 --outfile releases/minesweeper-tui-darwin-arm64",
     "compress:binary": "tar -czvf releases/minesweeper-tui-linux-x64.tar.gz -C releases minesweeper-tui-linux-x64 && tar -czvf releases/minesweeper-tui-darwin-x64.tar.gz -C releases minesweeper-tui-darwin-x64 && tar -czvf releases/minesweeper-tui-darwin-arm64.tar.gz -C releases minesweeper-tui-darwin-arm64"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "bin": {
     "minesweeper": "./dist/cli.js"
   },

@@ -9,6 +9,12 @@ export const getConfig = () => {
   if (!fs.existsSync(MAIN_DIR)) fs.mkdirSync(MAIN_DIR)
 
   const filePath = path.join(MAIN_DIR, 'config.json')
+
+  if (!fs.existsSync(filePath)) {
+    fs.writeFileSync(filePath, JSON.stringify({}), 'utf-8')
+    return {}
+  }
+
   const content = fs.readFileSync(filePath, 'utf-8')
   const config = JSON.parse(content || '{}') as Config
 
