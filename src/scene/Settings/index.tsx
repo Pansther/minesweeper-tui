@@ -13,8 +13,8 @@ const difficultyOptions = Object.values(Difficulty)
 
 const Settings = ({ focus }: { focus: { id: string } }) => {
   const { font } = useTheme()
-  const difficulty = useStore((s) => s.difficulty)
   const setScene = useStore((s) => s.setScene)
+  const difficulty = useStore((s) => s.difficulty)
   const setDifficulty = useStore((s) => s.setDifficulty)
 
   const [state, setState] = useImmer({

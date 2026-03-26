@@ -8,7 +8,7 @@ export const CONFIG = {
   [Easy]: {
     rows: 9,
     cols: 9,
-    percent: 0.01,
+    percent: 0.1,
   },
   [Medium]: {
     rows: 16,

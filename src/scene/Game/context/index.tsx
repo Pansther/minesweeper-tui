@@ -40,19 +40,21 @@ export const GameContextProvider = ({
 
   const config = CONFIG[difficulty]
 
-  const [state, setState] = useImmer({
+  const defaultValue = {
     ...DEFAULT_VALUE[0],
     selectedIndex: {
       row: Math.floor(config.rows / 2),
       col: Math.floor(config.cols / 2),
     },
     playRows: createEmptyGrid(config.rows, config.cols),
-  })
+  }
+
+  const [state, setState] = useImmer(defaultValue)
 
   const isPlay = [Idle, Play].includes(state.playState)
 
   const restart = () => {
-    setState(DEFAULT_VALUE[0])
+    setState(defaultValue)
   }
 
   return (
