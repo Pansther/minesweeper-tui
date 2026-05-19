@@ -12,8 +12,9 @@ const SceneManager = () => {
 
   switch (scene) {
     case Scene.Game:
+    case Scene.GameResume:
       return (
-        <GameContextProvider>
+        <GameContextProvider isResume={scene === Scene.GameResume}>
           <Game focus={focus} />
         </GameContextProvider>
       )

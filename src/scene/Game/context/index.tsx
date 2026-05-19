@@ -1,5 +1,6 @@
 import { useImmer } from 'use-immer'
 import { createContext, useContext } from 'react'
+import { getGameSave } from '@/helpers/game'
 import useStore from '@/store'
 import { CONFIG, createEmptyGrid } from '../helper'
 import { Difficulty, GameState } from '../type'
@@ -24,6 +25,7 @@ const DEFAULT_VALUE: GameContextType = [
       DEFAULT_PLAYROWS_CONFIG.cols,
     ),
     isPlay: false,
+    initTime: 0,
     restart: () => null,
   },
   () => {},
@@ -33,20 +35,27 @@ const GameContext = createContext<GameContextType>(DEFAULT_VALUE)
 
 export const GameContextProvider = ({
   children,
+  isResume = false,
 }: {
+  isResume?: boolean
   children?: React.ReactNode
 }) => {
   const difficulty = useStore((s) => s.difficulty)
 
   const config = CONFIG[difficulty]
+  const gameSave = isResume ? getGameSave() : undefined
 
-  const defaultValue = {
+  let defaultValue = {
     ...DEFAULT_VALUE[0],
     selectedIndex: {
       row: Math.floor(config.rows / 2),
       col: Math.floor(config.cols / 2),
     },
     playRows: createEmptyGrid(config.rows, config.cols),
+  }
+
+  if (gameSave) {
+    defaultValue = { ...defaultValue, ...gameSave, playState: GameState.Play }
   }
 
   const [state, setState] = useImmer(defaultValue)

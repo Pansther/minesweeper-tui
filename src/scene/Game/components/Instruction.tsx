@@ -67,7 +67,7 @@ const keys = [
   },
   {
     key: 'Q',
-    label: 'exit',
+    label: 'save & quit',
   },
 ] as const
 

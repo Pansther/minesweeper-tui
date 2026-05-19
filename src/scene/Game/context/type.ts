@@ -12,6 +12,7 @@ export interface GameContextValue {
   playState: GameState
   playRows: number[][]
   isPlay: boolean
+  initTime?: number
   restart: () => void
 }
 

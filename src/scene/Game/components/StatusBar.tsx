@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useImperativeHandle } from 'react'
 import { Box, Text } from 'ink'
 import useTheme from '@/hooks/useTheme'
 import useGameContext from '../context'
@@ -8,14 +8,24 @@ import { GameState } from '../type'
 
 const { Idle, Play, Fail, Complete } = GameState
 
+export interface StatusBarRef {
+  time: number
+}
+
+export interface StatusBarProps {
+  initTime?: number
+  ref?: React.Ref<StatusBarRef>
+}
+
 const padToTwoDigits = (num: number) => {
   return num.toString().padStart(2, '0')
 }
 
-const StatusBar = () => {
+const StatusBar = ({ ref, initTime = 0 }: StatusBarProps) => {
   const [game] = useGameContext()
   const { font, game: gameTheme } = useTheme()
-  const [{ hours, minutes, seconds }, { start, stop, restart }] = useTimer()
+  const [{ raw, hours, minutes, seconds }, { start, stop, restart }] =
+    useTimer(initTime)
 
   const { hint } = gameTheme
   const { textColor, accentColor, secondaryColor, foregroundColor } = font
@@ -27,6 +37,14 @@ const StatusBar = () => {
   if (hours > 0) {
     time = padToTwoDigits(hours) + ':' + time
   }
+
+  useImperativeHandle(
+    ref,
+    () => ({
+      time: raw,
+    }),
+    [raw],
+  )
 
   useEffect(() => {
     if (game.playState === Idle) restart()

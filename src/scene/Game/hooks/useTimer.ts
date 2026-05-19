@@ -14,8 +14,8 @@ const secondsToHms = (totalSeconds: number) => {
   }
 }
 
-const useTimer = () => {
-  const [timer, setTimer] = useState(0)
+const useTimer = (init = 0) => {
+  const [timer, setTimer] = useState(init)
   const intervalRef = useRef<NodeJS.Timeout>(undefined)
 
   const start = () => {
@@ -38,7 +38,10 @@ const useTimer = () => {
   }, [])
 
   return [
-    secondsToHms(timer),
+    {
+      ...secondsToHms(timer),
+      raw: timer,
+    },
     {
       start,
       stop,

@@ -1,7 +1,8 @@
+import { useRef } from 'react'
 import { Box } from 'ink'
 import Col from './components/Col'
 import Instruction from './components/Instruction'
-import StatusBar from './components/StatusBar'
+import StatusBar, { StatusBarRef } from './components/StatusBar'
 import useGameContext from './context'
 import useInteract from './hooks/useInteract'
 import useNavigate from './hooks/useNavigate'
@@ -9,12 +10,14 @@ import useNavigate from './hooks/useNavigate'
 const Game = ({ focus }: { focus: { id: string } }) => {
   const [game] = useGameContext()
 
-  useNavigate(focus)
+  const statusBarRef = useRef<StatusBarRef>(null)
+
   useInteract(focus)
+  useNavigate({ focus, ref: statusBarRef })
 
   return (
     <Box flexDirection="column" width="100%" padding={1}>
-      <StatusBar />
+      <StatusBar ref={statusBarRef} initTime={game?.initTime} />
 
       <Box
         width="100%"

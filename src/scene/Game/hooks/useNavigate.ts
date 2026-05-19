@@ -1,7 +1,9 @@
 import { useKeybindings } from 'giggles'
+import { clearSaveGame, saveGame } from '@/helpers/game'
 import useTheme from '@/hooks/useTheme'
 import useStore from '@/store'
 import { Scene } from '@/store/type'
+import { StatusBarRef } from '../components/StatusBar'
 import useGameContext from '../context'
 import { GameState } from '../type'
 import { AvailableNavigateKey } from './type'
@@ -21,11 +23,18 @@ const {
   Middle,
 } = AvailableNavigateKey
 
-const useNavigate = (focus: { id: string }) => {
+const useNavigate = ({
+  ref,
+  focus,
+}: {
+  focus: { id: string }
+  ref?: React.RefObject<StatusBarRef | null>
+}) => {
   const { cycleTheme } = useTheme()
   const setScene = useStore((s) => s.setScene)
-  const [{ restart }, setGame] = useGameContext()
   const toggleIsShowKey = useStore((s) => s.toggleIsShowKey)
+  const [{ mines, playRows, playState, hintAmount, restart }, setGame] =
+    useGameContext()
 
   const navigate = (key: AvailableNavigateKey) => {
     switch (key) {
@@ -85,6 +94,21 @@ const useNavigate = (focus: { id: string }) => {
     })
   }
 
+  const saveAndQuit = () => {
+    if (playState !== GameState.Play) {
+      clearSaveGame()
+    } else {
+      saveGame({
+        mines,
+        playRows,
+        hintAmount,
+        initTime: ref?.current?.time ?? 0,
+      })
+    }
+
+    setScene(Scene.Menu)
+  }
+
   useKeybindings(focus, {
     j: { action: () => navigate(Down), name: 'Move Down' },
     down: { action: () => navigate(Down), name: 'Move Down' },
@@ -103,7 +127,7 @@ const useNavigate = (focus: { id: string }) => {
     M: { action: () => navigate(Middle), name: 'Middle' },
     r: { action: restart, name: 'Restart' },
     '?': { action: toggleIsShowKey, name: 'Hide Keys' },
-    Q: { action: () => setScene(Scene.Menu), name: 'Quit' },
+    Q: { action: saveAndQuit, name: 'Quit' },
   })
 }
 

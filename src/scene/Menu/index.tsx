@@ -1,46 +1,71 @@
 import cx from 'clsx'
-import { useState } from 'react'
+import { useImmer } from 'use-immer'
+import data from "@/../package.json" with { type: "json" };
 import { Box, Text } from 'ink'
 import { useKeybindings } from 'giggles'
+import { getGameSave } from '@/helpers/game'
 import useTheme from '@/hooks/useTheme'
 import useStore from '@/store'
 import { Scene } from '@/store/type'
 
 const menuItems = [
-  { label: 'New Game', value: Scene.Game },
-  { label: 'Settings', value: Scene.Setting },
-  { label: 'Quit', value: Scene.Quit },
+  { label: 'Resume', scene: Scene.GameResume, value: 1, disabled: false },
+  { label: 'New Game', scene: Scene.Game, value: 2, disabled: false },
+  { label: 'Settings', scene: Scene.Setting, value: 3, disabled: false },
+  { label: 'Quit', scene: Scene.Quit, value: 4, disabled: false },
 ]
+
+const getInitState = () => {
+  const gameSave = getGameSave()
+  const items = menuItems.map((item) => ({ ...item }))
+  let choice = menuItems[0].value
+
+  if (!gameSave || !gameSave?.playRows?.length) {
+    items[0].disabled = true
+    choice = menuItems[1].value
+  }
+
+  return {
+    items,
+    choice,
+  }
+}
 
 const Menu = ({ focus }: { focus: { id: string } }) => {
   const { font } = useTheme()
   const setScene = useStore((s) => s.setScene)
 
-  const [choice, setChoice] = useState(Scene.Game)
+  const [state, setState] = useImmer(getInitState())
 
   const { foregroundColor, accentColor, textColor } = font
 
   const onSubmit = () => {
-    if (choice === Scene.Quit) {
+    const item = state.items.find(({ value }) => value === state.choice)
+
+    if (!item || item?.disabled) return
+
+    if (item.scene === Scene.Quit) {
       process.exit()
     }
 
-    setScene(choice)
+    setScene(item.scene)
   }
 
   const navigate = (key: 'up' | 'down') => {
     switch (key) {
       case 'up':
-        setChoice((prev) =>
-          prev - 1 < menuItems[0].value
-            ? menuItems[menuItems?.length - 1].value
-            : prev - 1,
-        )
+        setState((s) => {
+          s.choice =
+            s.choice - 1 < s.items[0].value
+              ? s.items[s.items?.length - 1].value
+              : s.choice - 1
+        })
         break
       case 'down':
-        setChoice((prev) =>
-          prev + 1 > menuItems.length ? menuItems[0].value : prev + 1,
-        )
+        setState((s) => {
+          s.choice =
+            s.choice + 1 > s.items.length ? s.items[0].value : s.choice + 1
+        })
         break
     }
   }
@@ -61,7 +86,7 @@ const Menu = ({ focus }: { focus: { id: string } }) => {
       flexDirection="column"
       justifyContent="center"
     >
-      <Box gap={4}>
+      <Box gap={4} alignItems="flex-end">
         <Text color={accentColor}>
           {`
 ▗▖  ▗▖▗▄▄▄▖▗▖  ▗▖▗▄▄▄▖ ▗▄▄▖▗▖ ▗▖▗▄▄▄▖▗▄▄▄▖▗▄▄▖ ▗▄▄▄▖▗▄▄▖
@@ -76,15 +101,17 @@ const Menu = ({ focus }: { focus: { id: string } }) => {
   █  ▐▌ ▐▌  █
   █  ▝▚▄▞▘▗▄█▄▖`}
         </Text>
+        <Text>v{data?.version}</Text>
       </Box>
 
       <Box flexDirection="column">
-        {menuItems.map(({ label, value }) => {
-          const isSelected = value === choice
+        {state.items?.map(({ label, value, disabled }) => {
+          const isSelected = value === state.choice
 
           return (
             <Box key={value} justifyContent="center">
               <Text
+                dimColor={disabled}
                 color={isSelected ? accentColor : textColor}
                 backgroundColor={cx({ [foregroundColor]: isSelected })}
               >

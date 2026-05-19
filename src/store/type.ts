@@ -1,6 +1,7 @@
 export enum Scene {
   Menu,
   Game,
+  GameResume,
   Setting,
   Quit,
 }

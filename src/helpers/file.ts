@@ -12,7 +12,7 @@ export const getConfig = () => {
 
   if (!fs.existsSync(filePath)) {
     fs.writeFileSync(filePath, JSON.stringify({}), 'utf-8')
-    return {}
+    return {} as Config
   }
 
   const content = fs.readFileSync(filePath, 'utf-8')
