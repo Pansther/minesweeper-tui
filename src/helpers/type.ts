@@ -14,3 +14,16 @@ export type GameSave = Pick<
 > & {
   initTime: number
 }
+
+export interface GameStatItem {
+  win: number
+  total: number
+  totalDuration: number
+  totalSafeCell: number
+  totalSafeCellOpened: number
+}
+
+export interface GameStats {
+  overall: GameStatItem
+  detail: Record<Difficulty, GameStatItem>
+}

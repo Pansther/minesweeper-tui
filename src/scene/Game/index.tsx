@@ -6,6 +6,7 @@ import StatusBar, { StatusBarRef } from './components/StatusBar'
 import useGameContext from './context'
 import useInteract from './hooks/useInteract'
 import useNavigate from './hooks/useNavigate'
+import useStats from './hooks/useStats'
 
 const Game = ({ focus }: { focus: { id: string } }) => {
   const [game] = useGameContext()
@@ -13,6 +14,7 @@ const Game = ({ focus }: { focus: { id: string } }) => {
   const statusBarRef = useRef<StatusBarRef>(null)
 
   useInteract(focus)
+  useStats({ focus, ref: statusBarRef })
   useNavigate({ focus, ref: statusBarRef })
 
   return (
