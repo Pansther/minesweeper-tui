@@ -1,6 +1,6 @@
 import { useImmer } from 'use-immer'
 import { createContext, useContext } from 'react'
-import { getGameSave } from '@/helpers/game'
+import { clearSaveGame, getGameSave } from '@/helpers/game'
 import useStore from '@/store'
 import { CONFIG, createEmptyGrid } from '../helper'
 import { Difficulty, GameState } from '../type'
@@ -45,7 +45,7 @@ export const GameContextProvider = ({
   const config = CONFIG[difficulty]
   const gameSave = isResume ? getGameSave() : undefined
 
-  let defaultValue = {
+  let defaultState = {
     ...DEFAULT_VALUE[0],
     selectedIndex: {
       row: Math.floor(config.rows / 2),
@@ -53,17 +53,19 @@ export const GameContextProvider = ({
     },
     playRows: createEmptyGrid(config.rows, config.cols),
   }
+  let saveState = { ...defaultState }
 
   if (gameSave) {
-    defaultValue = { ...defaultValue, ...gameSave, playState: GameState.Play }
+    saveState = { ...defaultState, ...gameSave, playState: GameState.Play }
   }
 
-  const [state, setState] = useImmer(defaultValue)
+  const [state, setState] = useImmer(gameSave ? saveState : defaultState)
 
   const isPlay = [Idle, Play].includes(state.playState)
 
   const restart = () => {
-    setState(defaultValue)
+    clearSaveGame()
+    setState(defaultState)
   }
 
   return (
