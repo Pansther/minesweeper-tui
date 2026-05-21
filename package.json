@@ -1,32 +1,8 @@
 {
   "name": "minesweeper-tui",
   "version": "0.2.0",
-  "type": "module",
-  "license": "MIT",
   "author": "Pansther",
-  "description": "A Vim-friendly Minesweeper TUI.",
   "repository": "Pansther/minesweeper-tui",
-  "scripts": {
-    "dev": "bun --watch src/index.tsx",
-    "start": "bun src/index.tsx",
-    "build": "bun build ./src/index.tsx --outfile ./dist/cli.js --target node",
-    "build:binary": "rm -rf releases && mkdir releases && bun build ./src/index.tsx --compile --minify --target bun-linux-x64 --outfile releases/minesweeper-tui-linux-x64 && bun build ./src/index.tsx --compile --minify --target bun-darwin-x64 --outfile releases/minesweeper-tui-darwin-x64 && bun build ./src/index.tsx --compile --minify --target bun-darwin-arm64 --outfile releases/minesweeper-tui-darwin-arm64",
-    "compress:binary": "tar -czvf releases/minesweeper-tui-linux-x64.tar.gz -C releases minesweeper-tui-linux-x64 && tar -czvf releases/minesweeper-tui-darwin-x64.tar.gz -C releases minesweeper-tui-darwin-x64 && tar -czvf releases/minesweeper-tui-darwin-arm64.tar.gz -C releases minesweeper-tui-darwin-arm64"
-  },
-  "engines": {
-    "node": ">=20"
-  },
-  "bin": {
-    "minesweeper": "./dist/cli.js"
-  },
-  "files": [
-    "dist",
-    "README.md"
-  ],
-  "publishConfig": {
-    "access": "public"
-  },
-  "dependencies": {},
   "devDependencies": {
     "@trivago/prettier-plugin-sort-imports": "^4.3.0",
     "@types/node": "^25.5.0",
@@ -47,6 +23,17 @@
     "use-immer": "^0.11.0",
     "zustand": "^5.0.12"
   },
+  "bin": {
+    "minesweeper": "./dist/cli.js"
+  },
+  "description": "A Vim-friendly Minesweeper TUI.",
+  "engines": {
+    "node": ">=20"
+  },
+  "files": [
+    "dist",
+    "README.md"
+  ],
   "keywords": [
     "react",
     "ink",
@@ -54,5 +41,17 @@
     "tui",
     "minesweeper"
   ],
-  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e"
+  "license": "MIT",
+  "packageManager": "yarn@1.22.22+sha512.a6b2f7906b721bba3d67d4aff083df04dad64c399707841b7acf00f6b133b7ac24255f2652fa22ae3534329dc6180534e98d17432037ff6fd140556e2bb3137e",
+  "publishConfig": {
+    "access": "public"
+  },
+  "scripts": {
+    "dev": "bun --watch src/index.tsx",
+    "start": "bun src/index.tsx",
+    "build": "bun build ./src/index.tsx --outfile ./dist/cli.js --target node",
+    "build:binary": "rm -rf releases && mkdir releases && bun build ./src/index.tsx --compile --minify --target bun-linux-x64 --outfile releases/minesweeper-tui-linux-x64 && bun build ./src/index.tsx --compile --minify --target bun-darwin-x64 --outfile releases/minesweeper-tui-darwin-x64 && bun build ./src/index.tsx --compile --minify --target bun-darwin-arm64 --outfile releases/minesweeper-tui-darwin-arm64",
+    "compress:binary": "tar -czvf releases/minesweeper-tui-linux-x64.tar.gz -C releases minesweeper-tui-linux-x64 && tar -czvf releases/minesweeper-tui-darwin-x64.tar.gz -C releases minesweeper-tui-darwin-x64 && tar -czvf releases/minesweeper-tui-darwin-arm64.tar.gz -C releases minesweeper-tui-darwin-arm64"
+  },
+  "type": "module"
 }

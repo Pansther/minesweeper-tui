@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from 'react'
 
-const secondsToHms = (totalSeconds: number) => {
+export const secondsToHms = (totalSeconds: number) => {
   totalSeconds = Math.floor(totalSeconds)
 
   const hours = Math.floor(totalSeconds / 3600)

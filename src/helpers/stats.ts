@@ -67,3 +67,12 @@ export const saveStats = (cb: (oldContent: GameStats) => GameStats) => {
 
   fs.writeFileSync(filePath, content, 'utf8')
 }
+
+export const clearStats = () => {
+  if (!fs.existsSync(MAIN_DIR)) fs.mkdirSync(MAIN_DIR)
+
+  const filePath = path.join(MAIN_DIR, statsFilename)
+  const content = JSON.stringify(DEFAULT_STATS)
+
+  fs.writeFileSync(filePath, content, 'utf8')
+}

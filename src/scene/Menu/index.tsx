@@ -11,7 +11,7 @@ import { Scene } from '@/store/type'
 const menuItems = [
   { label: 'Resume', scene: Scene.GameResume, value: 1, disabled: false },
   { label: 'New Game', scene: Scene.Game, value: 2, disabled: false },
-  { label: 'Statistics', scene: Scene.Statistics, value: 3, disabled: true },
+  { label: 'Statistics', scene: Scene.Statistics, value: 3, disabled: false },
   { label: 'Settings', scene: Scene.Setting, value: 4, disabled: false },
   { label: 'Quit', scene: Scene.Quit, value: 5, disabled: false },
 ]

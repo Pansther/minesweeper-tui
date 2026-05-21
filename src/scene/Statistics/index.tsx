@@ -1,10 +1,12 @@
-import cx from 'clsx'
 import { useImmer } from 'use-immer'
 import { Box, Text } from 'ink'
 import { useKeybindings } from 'giggles'
+import { clearStats, getStats } from '@/helpers/stats'
+import { GameStatItem } from '@/helpers/type'
 import useTheme from '@/hooks/useTheme'
 import useStore from '@/store'
 import { Scene } from '@/store/type'
+import { secondsToHms } from '../Game/hooks/useTimer'
 import { Difficulty } from '../Game/type'
 
 const difficultyOptions = Object.values(Difficulty)
@@ -12,29 +14,190 @@ const difficultyOptions = Object.values(Difficulty)
   .filter(Number)
 
 const Statistics = ({ focus }: { focus: { id: string } }) => {
-  const { font } = useTheme()
+  const { font, game } = useTheme()
   const setScene = useStore((s) => s.setScene)
-  const difficulty = useStore((s) => s.difficulty)
-  const setDifficulty = useStore((s) => s.setDifficulty)
 
   const [state, setState] = useImmer({
-    items: [],
-    setting: 'difficulty',
+    isReset: false,
+    option: Difficulty.Easy,
   })
 
-  const isSelectDifficulty = state.setting === 'difficulty'
-  const { foregroundColor, accentColor, secondaryColor, textColor } = font
+  const { dangers } = game
+  const { accentColor, foregroundColor, textColor } = font
+
+  const { overall, detail } = getStats()
+
+  const navigate = (key: 'right' | 'left') => {
+    setState((s) => {
+      switch (key) {
+        case 'left':
+          if (s.option - 1 < difficultyOptions[0]) {
+            s.option = difficultyOptions[difficultyOptions?.length - 1]
+          } else {
+            s.option -= 1
+          }
+
+          break
+        case 'right':
+          if (s.option + 1 > difficultyOptions.length) {
+            s.option = difficultyOptions[0]
+          } else {
+            s.option += 1
+          }
+
+          break
+      }
+    })
+  }
+
+  const resetStats = () => {
+    setState((s) => {
+      s.isReset = true
+    })
+  }
+
+  const confirmReset = () => {
+    if (!state.isReset) return
+
+    clearStats()
+    setState((s) => {
+      s.isReset = false
+    })
+  }
+
+  useKeybindings(focus, {
+    h: () => navigate('left'),
+    left: () => navigate('left'),
+    l: () => navigate('right'),
+    right: () => navigate('right'),
+    r: resetStats,
+    y: confirmReset,
+    n: () =>
+      setState((s) => {
+        s.isReset = false
+      }),
+    escape: () => setScene(Scene.Menu),
+    q: () => setScene(Scene.Menu),
+  })
 
   return (
     <Box
       width="100%"
+      alignItems="center"
       flexDirection="column"
       justifyContent="center"
-      alignItems="center"
     >
-      <Box></Box>
+      <Box marginBottom={1} height={1}>
+        <Text color={textColor}>Overall</Text>
+      </Box>
+
+      <Box width="100%" justifyContent="center">
+        <Box
+          width="50%"
+          borderStyle="single"
+          borderColor={accentColor}
+          flexDirection="column"
+        >
+          <Stat {...overall} />
+        </Box>
+      </Box>
+
+      <Box marginY={1} height={1}>
+        <Box>
+          <Text color={textColor}>Difficulty: </Text>
+          <Text
+            backgroundColor={foregroundColor}
+            color={dangers?.[state.option]}
+          >
+            {' '}
+            {Difficulty[state.option]}{' '}
+          </Text>
+        </Box>
+      </Box>
+
+      <Box width="100%" justifyContent="center">
+        <Box
+          width="50%"
+          borderStyle="single"
+          borderColor={accentColor}
+          flexDirection="column"
+        >
+          <Stat {...detail[state.option]} />
+        </Box>
+      </Box>
+
+      {state.isReset ? (
+        <Box gap={1} marginTop={1}>
+          <Text dimColor color={accentColor}>
+            y
+          </Text>
+          <Text color={dangers[3]}>Confirm,</Text>
+
+          <Text dimColor color={accentColor}>
+            n
+          </Text>
+          <Text>Cancel</Text>
+        </Box>
+      ) : (
+        <Box gap={1} marginTop={1}>
+          <Text dimColor color={accentColor}>
+            ←/h
+          </Text>
+          <Text>Left,</Text>
+
+          <Text dimColor color={accentColor}>
+            →/l
+          </Text>
+          <Text>Right,</Text>
+
+          <Text dimColor color={accentColor}>
+            r
+          </Text>
+          <Text>Reset Stats,</Text>
+
+          <Text dimColor color={accentColor}>
+            esc/q
+          </Text>
+          <Text>Back</Text>
+        </Box>
+      )}
     </Box>
   )
 }
 
 export default Statistics
+
+const Stat = ({
+  win,
+  total,
+  totalDuration,
+  totalSafeCell,
+  totalSafeCellOpened,
+}: GameStatItem) => {
+  const winRate = (win * 100) / (total || 1)
+  const explorationRate = (totalSafeCellOpened * 100) / (totalSafeCell || 1)
+  const averageTime = totalDuration / (win || 1)
+  const { hours = 0, minutes = 0, seconds = 0 } = secondsToHms(averageTime)
+
+  return (
+    <>
+      <Item label="Games Played" value={total?.toLocaleString()} />
+      <Item label="Won" value={win?.toLocaleString()} />
+      <Item label="Win Rate" value={`${winRate.toFixed(2)}%`} />
+      <Item label="Exploration Rate" value={`${explorationRate.toFixed(2)}%`} />
+      <Item
+        label="Average Time"
+        value={`${hours} Hours ${minutes} Minutes ${seconds} Seconds`}
+      />
+    </>
+  )
+}
+
+const Item = ({ label, value }: { label: string; value: string | number }) => {
+  return (
+    <Box justifyContent="space-between">
+      <Text>{label}: </Text>
+      <Text>{value}</Text>
+    </Box>
+  )
+}
