@@ -7,7 +7,7 @@
 
 A **Vim-friendly** Minesweeper game playable directly in your terminal. Built with React Ink.
 
-![cover](https://raw.githubusercontent.com/Pansther/minesweeper-tui/main/demo/cover-v0.3.png)
+![cover](https://raw.githubusercontent.com/Pansther/minesweeper-tui/main/demo/cover-v0.3.0.png)
 
 ## About
 
