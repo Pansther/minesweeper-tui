@@ -21,6 +21,8 @@ export interface GameStatItem {
   totalDuration: number
   totalSafeCell: number
   totalSafeCellOpened: number
+  mineFlagged: number
+  bestTime: number
 }
 
 export interface GameStats {

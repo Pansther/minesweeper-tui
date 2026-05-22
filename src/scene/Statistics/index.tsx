@@ -88,7 +88,10 @@ const Statistics = ({ focus }: { focus: { id: string } }) => {
       justifyContent="center"
     >
       <Box marginBottom={1} height={1}>
-        <Text color={textColor}>Overall</Text>
+        <Text backgroundColor={foregroundColor} color={accentColor}>
+          {' '}
+          Overall{' '}
+        </Text>
       </Box>
 
       <Box width="100%" justifyContent="center">
@@ -98,7 +101,7 @@ const Statistics = ({ focus }: { focus: { id: string } }) => {
           borderColor={accentColor}
           flexDirection="column"
         >
-          <Stat {...overall} />
+          <Stat {...overall} bestTime={Infinity} />
         </Box>
       </Box>
 
@@ -173,21 +176,39 @@ const Stat = ({
   totalDuration,
   totalSafeCell,
   totalSafeCellOpened,
+  mineFlagged,
+  bestTime,
 }: GameStatItem) => {
   const winRate = (win * 100) / (total || 1)
   const explorationRate = (totalSafeCellOpened * 100) / (totalSafeCell || 1)
-  const averageTime = totalDuration / (win || 1)
-  const { hours = 0, minutes = 0, seconds = 0 } = secondsToHms(averageTime)
+  const averageTime = win ? totalDuration / win : 0
+  const totalDurationHms = secondsToHms(totalDuration)
+  const averageTimeHms = secondsToHms(averageTime)
+  const bestTimeHms = secondsToHms(bestTime)
 
   return (
     <>
       <Item label="Games Played" value={total?.toLocaleString()} />
       <Item label="Won" value={win?.toLocaleString()} />
+      {bestTime !== Infinity && (
+        <Item
+          label="Best Time"
+          value={`${bestTimeHms?.hours} Hours ${bestTimeHms?.minutes} Minutes ${bestTimeHms?.seconds} Seconds`}
+        />
+      )}
       <Item label="Win Rate" value={`${winRate.toFixed(2)}%`} />
       <Item label="Exploration Rate" value={`${explorationRate.toFixed(2)}%`} />
       <Item
         label="Average Time"
-        value={`${hours} Hours ${minutes} Minutes ${seconds} Seconds`}
+        value={`${averageTimeHms?.hours} Hours ${averageTimeHms?.minutes} Minutes ${averageTimeHms?.seconds} Seconds`}
+      />
+      <Item
+        label="Total Mines Disarmed"
+        value={mineFlagged?.toLocaleString()}
+      />
+      <Item
+        label="Total Duration"
+        value={`${totalDurationHms?.hours} Hours ${totalDurationHms?.minutes} Minutes ${totalDurationHms?.seconds} Seconds`}
       />
     </>
   )

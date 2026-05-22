@@ -13,6 +13,8 @@ const DEFAULT_STATS: GameStats = {
     totalDuration: 0,
     totalSafeCell: 0,
     totalSafeCellOpened: 0,
+    mineFlagged: 0,
+    bestTime: 0,
   },
   detail: {
     [Difficulty.Easy]: {
@@ -21,6 +23,8 @@ const DEFAULT_STATS: GameStats = {
       totalDuration: 0,
       totalSafeCell: 0,
       totalSafeCellOpened: 0,
+      mineFlagged: 0,
+      bestTime: 0,
     },
     [Difficulty.Medium]: {
       win: 0,
@@ -28,6 +32,8 @@ const DEFAULT_STATS: GameStats = {
       totalDuration: 0,
       totalSafeCell: 0,
       totalSafeCellOpened: 0,
+      mineFlagged: 0,
+      bestTime: 0,
     },
     [Difficulty.Hard]: {
       win: 0,
@@ -35,6 +41,8 @@ const DEFAULT_STATS: GameStats = {
       totalDuration: 0,
       totalSafeCell: 0,
       totalSafeCellOpened: 0,
+      mineFlagged: 0,
+      bestTime: 0,
     },
   },
 }

@@ -8,17 +8,16 @@ import { GameState, ItemType, MineType } from '../type'
 
 const { Flag, Open } = ItemType
 const { Empty } = MineType
-const { Idle, Play, Fail, Complete } = GameState
+const { Fail, Complete } = GameState
 
 const useStats = ({
   ref,
-  focus,
 }: {
   focus: { id: string }
   ref?: React.RefObject<StatusBarRef | null>
 }) => {
   const difficulty = useStore((s) => s.difficulty)
-  const [{ playState, playRows, mines }, setGame] = useGameContext()
+  const [{ playState, playRows, mines }] = useGameContext()
 
   useEffect(() => {
     const getExplorationData = () => {
@@ -32,7 +31,13 @@ const useStats = ({
         .map((col) => (col === Empty ? 1 : 0) as number)
       const totalSafeCell = safeCells.reduce((prev, curr) => prev + curr, 0)
 
+      const flags = playRows
+        .flatMap((col) => col)
+        .map((col) => (col === Flag ? 1 : 0) as number)
+      const mineFlagged = flags.reduce((prev, curr) => prev + curr, 0)
+
       return {
+        mineFlagged,
         totalOpenCell,
         totalSafeCell,
       }
@@ -40,7 +45,7 @@ const useStats = ({
 
     if ([Complete, Fail].includes(playState)) {
       const duration = ref?.current?.time ?? 0
-      const { totalSafeCell, totalOpenCell } = getExplorationData()
+      const { totalSafeCell, totalOpenCell, mineFlagged } = getExplorationData()
 
       saveStats((prev) =>
         produce(prev, (s) => {
@@ -49,12 +54,22 @@ const useStats = ({
           s.overall.totalDuration += duration
           s.overall.totalSafeCell += totalSafeCell
           s.overall.totalSafeCellOpened += totalOpenCell
+          s.overall.mineFlagged += mineFlagged
 
           s.detail[difficulty].total += 1
           s.detail[difficulty].win += playState === Complete ? 1 : 0
           s.detail[difficulty].totalDuration += duration
           s.detail[difficulty].totalSafeCell += totalSafeCell
           s.detail[difficulty].totalSafeCellOpened += totalOpenCell
+          s.detail[difficulty].mineFlagged += mineFlagged
+
+          if (
+            playState === Complete &&
+            (!s.detail[difficulty].bestTime ||
+              s.detail[difficulty].bestTime > duration)
+          ) {
+            s.detail[difficulty].bestTime = duration
+          }
         }),
       )
     }
