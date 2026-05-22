@@ -1,6 +1,6 @@
 {
   "name": "minesweeper-tui",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "author": "Pansther",
   "repository": "Pansther/minesweeper-tui",
   "devDependencies": {
