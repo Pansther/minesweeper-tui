@@ -3,7 +3,7 @@
 [![npm version](https://img.shields.io/npm/v/minesweeper-tui.svg)](https://www.npmjs.com/package/minesweeper-tui)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Bun](https://img.shields.io/badge/Bun-%23000000.svg?style=flat&logo=bun&logoColor=white)](https://bun.sh)
-[![Releases](https://img.shields.io/github/v/release/Pansther/note-tui)](https://github.com/Pansther/note-tui/releases)
+[![Releases](https://img.shields.io/github/v/release/Pansther/minesweeper-tui)](https://github.com/Pansther/minesweeper-tui/releases)
 
 A **Vim-friendly** Minesweeper game playable directly in your terminal. Built with React Ink.
 
