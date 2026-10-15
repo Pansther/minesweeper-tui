@@ -33,6 +33,8 @@ I hope you have fun playing it!
 
 ![flag-adjacent](https://raw.githubusercontent.com/Pansther/minesweeper-tui/main/demo/flag-adjacent.gif)
 
+- `relative line numbers`: Toggle with `n` to show each row's distance from the current cursor, making count-prefixed movement such as `5j` faster.
+
 ## Installation
 
 Download pre-built binaries for your platform from the [Releases](https://github.com/Pansther/minesweeper-tui/releases) page.
@@ -87,17 +89,21 @@ To start the `minesweeper-tui` application directly from the source code, make s
   - `↓/j`: Move down
   - `↑/k`: Move up
   - `→/l`: Move right
+  - `w`: Move forward
+  - `b`: Move backward
   - `0`: Go to start of row
   - `$`: Go to end of row
+  - `1-9`: Set a count prefix
   - `g`: Go to top
-  - `G`: Go to bottom
+  - `G`: Go to bottom or go to a line with a count prefix
   - `M`: Go to center
 - **Gameplay:**
-  - `space`: Open cell
+  - `x/space`: Open cell
   - `f`: Flag cell
   - `backspace`: Hint
 - **Game Management:**
 
+  - `n`: Toggle relative line numbers
   - `</>`: Cycle theme
   - `r`: Restart game
   - `?`: Toggle visibility of key instructions
