@@ -13,6 +13,7 @@ interface Store extends Config {
   setScene: (scene: Scene) => void
   cycleTheme: (amount: number) => void
   toggleIsShowKey: () => void
+  toggleRelativeLine: () => void
   setDifficulty: (difficulty: Difficulty) => void
 }
 
@@ -24,6 +25,7 @@ const useStore = create(
     theme: config?.theme ?? AvailableTheme.Catppuccin,
     difficulty: config?.difficulty ?? Difficulty.Medium,
     isShowKey: config?.isShowKey ?? true,
+    isRelativeLine: config.isRelativeLine ?? true,
     setScene(scene) {
       set((state) => {
         state.scene = scene
@@ -49,6 +51,13 @@ const useStore = create(
 
       return set((s) => {
         s.isShowKey = !s.isShowKey
+      })
+    },
+    toggleRelativeLine: () => {
+      saveConfig({ isRelativeLine: !get().isRelativeLine })
+
+      return set((s) => {
+        s.isRelativeLine = !s.isRelativeLine
       })
     },
     setDifficulty: (difficulty) => {

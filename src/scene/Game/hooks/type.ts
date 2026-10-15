@@ -10,4 +10,6 @@ export enum AvailableNavigateKey {
   Start,
   End,
   Middle,
+  Forward,
+  Backward,
 }

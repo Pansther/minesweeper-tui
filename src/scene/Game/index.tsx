@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { Box } from 'ink'
 import Col from './components/Col'
 import Instruction from './components/Instruction'
+import RelativeCol from './components/RelativeCol'
 import StatusBar, { StatusBarRef } from './components/StatusBar'
 import useGameContext from './context'
 import useInteract from './hooks/useInteract'
@@ -25,12 +26,14 @@ const Game = ({ focus }: { focus: { id: string } }) => {
         width="100%"
         height="100%"
         marginTop={-1}
+        marginLeft={-2}
         alignItems="center"
         flexDirection="column"
         justifyContent="center"
       >
         {game.playRows.map((rows, rowIndex) => (
           <Box key={rowIndex}>
+            <RelativeCol rowIndex={rowIndex} />
             {rows.map((col, colIndex) => (
               <Col
                 col={col}

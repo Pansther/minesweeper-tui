@@ -133,6 +133,7 @@ const useInteract = (focus: { id: string }) => {
 
   useKeybindings(focus, {
     ' ': { action: openItem, name: 'Open' },
+    x: { action: openItem, name: 'Open' },
     f: { action: flagItem, name: 'Toggle Flag' },
     backspace: { action: showHint, name: 'Hint' },
   })

@@ -22,6 +22,14 @@ const keys = [
     label: 'right',
   },
   {
+    key: 'w',
+    label: 'forward',
+  },
+  {
+    key: 'b',
+    label: 'backward',
+  },
+  {
     key: '0',
     label: 'start',
   },
@@ -30,19 +38,23 @@ const keys = [
     label: 'end',
   },
   {
+    key: '1-9',
+    label: 'count prefix',
+  },
+  {
     key: 'g',
     label: 'top',
   },
   {
     key: 'G',
-    label: 'bottom',
+    label: 'bottom/go to line',
   },
   {
     key: 'M',
     label: 'center',
   },
   {
-    key: 'space',
+    key: 'x/space',
     label: 'open',
   },
   {
@@ -52,6 +64,10 @@ const keys = [
   {
     key: 'backspace',
     label: 'hint',
+  },
+  {
+    key: 'n',
+    label: 'toggle relative line',
   },
   {
     key: '</>',

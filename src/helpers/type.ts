@@ -6,6 +6,7 @@ export interface Config {
   theme: AvailableTheme
   difficulty: Difficulty
   isShowKey: boolean
+  isRelativeLine: boolean
 }
 
 export type GameSave = Pick<
